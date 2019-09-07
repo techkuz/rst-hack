@@ -15,9 +15,7 @@ class Courier:
     courier_id = None
     location_x = None
     location_y = None
-    status = 'FREE'
-    actions = []
-    orders = []
+    order_info = []
     has_order = False
 
 
@@ -86,8 +84,7 @@ def init_start(file):
 def logic(couriers, depots, orders, actions: list):
     # [[c_id, action], [c_id, action]] list idx is an order number
     for order_id, c_id, action in enumerate(actions):
-        couriers[c_id].actions.append(action)
-        couriers[c_id].orders.append(order_id)
+        couriers[c_id].order_info.append((order_id, action))
 
     return couriers
 
@@ -104,13 +101,16 @@ if __name__ == '__main__':
     # итерируюсь по минутам рабочего времени курьеров
     for minute in range(START_MINUTES, END_MINUTES+1, 1):
         for courier in couriers:
-            if courier.actions[0] == 'pick':
-                if minute > courier.orders[0].pickup_from and minute < courier.orders[0].pickup_to:
+            courier_action = courier.order_info[0][1]
+            courier_order = courier.order_info[0][0]
+
+            if courier_action == 'pick':
+                if minute > courier_order.pickup_from and minute < courier_order.pickup_to:
                     action = courier.actions.pop()
                     courier.has_order = True
                     # order = courier.orders.pop()
-            elif courier.actions[0] == 'drop':
-                if minute > courier.orders[0].dropoff_from and minute < courier.orders[0].dropoff_to:
+            elif courier_action == 'drop':
+                if minute > courier_order.dropoff_from and minute < courier_order.dropoff_to:
                     action = courier.actions.pop()
                     courier.has_order = False
                     order = courier.orders.pop()
