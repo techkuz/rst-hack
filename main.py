@@ -41,7 +41,7 @@ class Order:
 
 
 def init_start(file):
-    with open(FILE, 'r') as file:
+    with open(file, 'r') as file:
         data = json.load(file)
         couriers = {}
         for courier in data['couriers']:
@@ -104,12 +104,12 @@ if __name__ == '__main__':
             courier_order = courier.order_info[0][0]
 
             if courier_action == 'pick':
-                if minute > courier_order.pickup_from and minute < courier_order.pickup_to:
+                if courier_order.pickup_from < minute < courier_order.pickup_to:
                     action = courier.order_info.pop()
                     courier.has_order = True
                     # order = courier.orders.pop()
             elif courier_action == 'drop':
-                if minute > courier_order.dropoff_from and minute < courier_order.dropoff_to:
+                if courier_order.dropoff_from < minute < courier_order.dropoff_to:
                     action = courier.order_info.pop()
                     courier.has_order = False
 
