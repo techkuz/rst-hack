@@ -10,21 +10,20 @@ class Environment:
 
     START_FILE = 'simple_input.json'
 
-    def __init__(self, file: str):
+    def __init__(self, file: str = START_FILE):
          with open(file, 'r') as file:
-            parser = Parser(file=file)
+            parser = Parser(data=file)
 
             self.couriers = parser.get_couriers()
             self.depots = parser.get_depots()
             self.orders = parser.get_orders()
-
 
     def logic(self, actions: list):
         # [[c_id, action], [c_id, action]] list idx is an order number
         for order_id, c_id, action in enumerate(actions):
             self.couriers[c_id].order_info.append((order_id, action))
 
-    def bang(self):
+    def main_logic(self):
         dummy_actions = []
         new_actions = self.logic(dummy_actions)
 
@@ -44,3 +43,6 @@ class Environment:
                         action = courier.order_info.pop()
                         courier.has_order = False
 
+
+if __name__ == '__main__':
+    env = Environment()
