@@ -1,6 +1,7 @@
 import json
 
-from helpers import Parser
+from parser import Parser
+
 
 class Environment:
     # 6 AM
