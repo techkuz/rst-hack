@@ -18,14 +18,14 @@ class Environment:
             self.depots = parser.get_depots()
             self.orders = parser.get_orders()
 
-    def logic(self, actions: list):
+    def new_action(self, actions: list):
         # [[c_id, action], [c_id, action]] list idx is an order number
         for order_id, c_id, action in enumerate(actions):
             self.couriers[c_id].order_info.append((order_id, action))
 
     def main_logic(self):
         dummy_actions = []
-        new_actions = self.logic(dummy_actions)
+        new_actions = self.new_action(dummy_actions)
 
         # итерируюсь по минутам рабочего времени курьеров
         for minute in range(self.START_MINUTES, self.END_MINUTES+1, 1):
