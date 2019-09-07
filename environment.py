@@ -18,12 +18,13 @@ class Environment:
             self.depots = parser.get_depots()
             self.orders = parser.get_orders()
 
-    def new_action(self, actions: list):
-        # [[c_id, action], [c_id, action]] list idx is an order number
+    def new_action(self, actions: list) -> None :
+        # На вход приходит лист из новых actions
+        # Формат: [[c_id, action], [c_id, action]]
         for order_id, c_id, action in enumerate(actions):
             self.couriers[c_id].order_info.append((order_id, action))
 
-    def main_logic(self):
+    def main_logic(self) -> None:
         dummy_actions = []
         new_actions = self.new_action(dummy_actions)
 
