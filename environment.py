@@ -17,6 +17,7 @@ class Environment:
             self.couriers = parser.get_couriers()
             self.depots = parser.get_depots()
             self.orders = parser.get_orders()
+            self.orders_payment = 0
 
     def new_action(self, actions: list) -> None :
         # На вход приходит лист из новых actions
@@ -42,7 +43,12 @@ class Environment:
                 elif courier_action == 'drop':
                     if courier_order.dropoff_from < minute < courier_order.dropoff_to:
                         action = courier.order_info.pop()
+                        self.orders_payment += courier_order.payment
                         courier.has_order = False
+
+        work_duration = sum([x['time'] - 360 for x in self.couriers.values()])
+        work_payment = work_duration * 2
+        profit = self.orders_payment - work_payment
 
 
 if __name__ == '__main__':
