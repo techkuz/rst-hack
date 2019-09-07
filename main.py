@@ -1,11 +1,24 @@
 import json
 
+ACTION = ['PICK', 'DROP']
+
+# 6 AM
+START_MINUTES = 360
+
+# 23:59
+END_MINUTES = 1439
+
+FILE = 'simple_input.json'
+
 
 class Courier:
     courier_id = None
     location_x = None
     location_y = None
     status = 'FREE'
+    actions = []
+    orders = []
+    has_order = False
 
 
 class Depot:
@@ -33,23 +46,23 @@ def init_start(file):
     with open(FILE, 'r') as file:
         data = json.load(file)
         # print(data)
-        couriers = []
+        couriers = {}
         for courier in data['couriers']:
             new_courier = Courier()
             new_courier.courier_id = courier.get('courier_id')
             new_courier.location_x = courier.get('location_x')
             new_courier.location_y = courier.get('location_y')
-            couriers.append(new_courier)
+            couriers[new_courier.courier_id] = new_courier
 
-        depots = []
+        depots = {}
         for depot in data['depots']:
             new_depot = Depot()
             new_depot.point_id = depot.get('point_id')
             new_depot.location_x = depot.get('location_x')
             new_depot.location_y = depot.get('location_y')
-            depots.append(new_depot)
+            depots[new_depot.point_id] = new_depot
 
-        orders = []
+        orders = {}
         for order in data['orders']:
             new_order = Order()
             new_order.order_id = order.get('order_id')
@@ -64,13 +77,20 @@ def init_start(file):
             new_order.dropoff_from = order.get('dropoff_from')
             new_order.dropoff_to = order.get('dropoff_to')
             new_order.payment = order.get('payment')
-            orders.append(new_order)
+            orders[new_order.order_id] = new_order
 
         res = {'couriers': couriers, 'depots': depots, 'orders': orders}
         return res
 
 
-FILE = 'contest_input.json'
+def logic(couriers, depots, orders, actions: list):
+    # [[c_id, action], [c_id, action]] list idx is an order number
+    for order_id, c_id, action in enumerate(actions):
+        couriers[c_id].actions.append(action)
+        couriers[c_id].orders.append(order_id)
+
+    return couriers
+
 
 if __name__ == '__main__':
     initial_data = init_start(file=FILE)
@@ -78,4 +98,20 @@ if __name__ == '__main__':
     depots = initial_data.get('depots')
     orders = initial_data.get('orders')
 
-    current_time = 0
+    actions = []
+    new_actions = logic(couriers, depots, orders, actions)
+
+    # итерируюсь по минутам рабочего времени курьеров
+    for minute in range(START_MINUTES, END_MINUTES+1, 1):
+        for courier in couriers:
+            if courier.actions[0] == 'pick':
+                if minute > courier.orders[0].pickup_from and minute < courier.orders[0].pickup_to:
+                    action = courier.actions.pop()
+                    courier.has_order = True
+                    # order = courier.orders.pop()
+            elif courier.actions[0] == 'drop':
+                if minute > courier.orders[0].dropoff_from and minute < courier.orders[0].dropoff_to:
+                    action = courier.actions.pop()
+                    courier.has_order = False
+                    order = courier.orders.pop()
+
