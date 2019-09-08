@@ -36,6 +36,8 @@ class Environment:
         # итерируюсь по минутам рабочего времени курьеров
         for minute in range(self.START_MINUTES, self.END_MINUTES+1, 1):
             for courier in self.couriers:
+                if not courier.order_info:
+                    continue
                 courier_action = courier.order_info[0][1]
                 courier_order = courier.order_info[0][0]
 
