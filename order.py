@@ -11,3 +11,5 @@ class Order:
     dropoff_from = None
     dropoff_to = None
     payment = None
+    # доставлен
+    delivered = False
