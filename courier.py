@@ -1,14 +1,15 @@
 class Courier:
-    courier_id = None
-    location_x = None
-    location_y = None
-    # order_info хранит [tuple(order_id, action), tuple(order_id, action)]
-    order_info = []
-    has_order = False
-    # не закончил работу
-    is_active = True
-    time = 360
-    destination_distance = None
+    def __init__(self):
+        self.courier_id = None
+        self.location_x = None
+        self.location_y = None
+        # order_info хранит [tuple(order_id, action), tuple(order_id, action)]
+        self.order_info = []
+        self.has_order = False
+        # не закончил работу
+        self.is_active = True
+        self.time = 360
+        self.destination_distance = None
 
     @classmethod
     def get_travel_duration_minutes(cls, location1, location2):

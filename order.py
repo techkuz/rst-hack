@@ -1,15 +1,16 @@
 class Order:
-    order_id = None
-    pickup_point_id = None
-    pickup_location_x = None
-    pickup_location_y = None
-    pickup_from = None
-    pickup_to = None
-    dropoff_point_id = None
-    dropoff_location_x = None
-    dropoff_location_y = None
-    dropoff_from = None
-    dropoff_to = None
-    payment = None
-    # доставлен
-    delivered = False
+    def __init__(self):
+        self.order_id = None
+        self.pickup_point_id = None
+        self.pickup_location_x = None
+        self.pickup_location_y = None
+        self.pickup_from = None
+        self.pickup_to = None
+        self.dropoff_point_id = None
+        self.dropoff_location_x = None
+        self.dropoff_location_y = None
+        self.dropoff_from = None
+        self.dropoff_to = None
+        self.payment = None
+        # доставлен
+        self.delivered = False

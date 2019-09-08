@@ -26,7 +26,7 @@ class Environment:
         # Формат: [[c_id, action], [c_id, action]]
         for order_idx, action_data in enumerate(actions):
             if action_data:
-                (courier_id, action) = action_data
+                courier_id, action = action_data
                 self.couriers[courier_id].order_info.append((order_idx+10001, action))
 
     def return_valuable_info(self) -> tuple:
@@ -44,6 +44,7 @@ class Environment:
             if self.couriers[courier_id].order_info:
                 courier_order = self.couriers[courier_id].order_info[0][0]
                 courier_action = self.couriers[courier_id].order_info[0][1]
+                print(courier_id,courier_order,courier_action,self.couriers[courier_id].order_info)
 
                 if courier_action == 'pickup':
                     distance = Courier.get_travel_duration_minutes([self.couriers[courier_id].location_x,
@@ -52,6 +53,7 @@ class Environment:
                                                                     self.orders[courier_order].pickup_location_y])
                     print('pick dist')
                     self.couriers[courier_id].destination_distance = distance
+                    #print(courier_id,distance)
                 elif courier_action == 'dropoff':
                     distance = Courier.get_travel_duration_minutes([self.couriers[courier_id].location_x,
                                                                     self.couriers[courier_id].location_y],

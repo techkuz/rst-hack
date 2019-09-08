@@ -4,11 +4,6 @@
       "courier_id": 1,
       "location_x": 20,
       "location_y": 20
-    },
-    {
-      "courier_id": 2,
-      "location_x": 50,
-      "location_y": 50
     }
   ],
   "depots" : [],
