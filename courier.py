@@ -5,3 +5,9 @@ class Courier:
     # order_info хранит [tuple(courier_id, action), tuple(courier_id, action)]
     order_info = []
     has_order = False
+    is_active = False
+
+    def get_travel_duration_minutes(self, location1, location2):
+        """Время перемещения курьера от точки location1 до точки location2 в минутах"""
+        distance = abs(location1[0] - location2[0]) + abs(location1[1] - location2[1])
+        return 10 + distance
