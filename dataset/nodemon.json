@@ -1,0 +1,6 @@
+{
+  "exec": "node ./node_modules/.bin/babel-node ./src/index.js",
+  "watch": ["*.js", "*.json", ".babelrc"],
+  "delay": "1000",
+  "ext": "js json"
+}
