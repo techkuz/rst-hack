@@ -29,9 +29,8 @@ class Environment:
         couriers_locations = [[courier['location_x'], courier['location_y']] for courier in self.couriers]
         return self.orders, couriers_locations, self.couriers
 
-    def main_logic(self) -> None:
-        # dummy_actions = []
-        # new_actions = self.new_action(dummy_actions)
+    def main_logic(self, action):
+        new_actions = self.new_action(action)
 
         # итерируюсь по минутам рабочего времени курьеров
         for minute in range(self.START_MINUTES, self.END_MINUTES+1, 1):
