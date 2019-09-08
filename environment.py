@@ -43,7 +43,6 @@ class Environment:
                     if courier_order.pickup_from < minute < courier_order.pickup_to:
                         action = courier.order_info.pop()
                         courier.has_order = True
-                        # order = courier.orders.pop()
                 elif courier_action == 'dropoff':
                     if courier_order.dropoff_from < minute < courier_order.dropoff_to:
                         self.orders_payment += courier_order.payment
