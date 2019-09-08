@@ -1,6 +1,7 @@
 from collections import defaultdict
 import numpy as np
 from scipy.spatial.distance import pdist, cdist
+from tqdm import tqdm
 
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
@@ -28,10 +29,10 @@ class ORToolsSolver:
 
         dist_matrix = cdist(all_positions, all_positions, 'cityblock')
         
-        payments = [order['payment'] for order in orders]
-        all_payments = - 0.5 * np.tile([0] * len(courier_positions) + [0] * len(pickup_positions) + 
-                                       [0] * len(depot_positions) + payments, (len(all_positions), 1))
-        payment_shift = all_payments.min()
+#         payments = [order['payment'] for order in orders]
+#         all_payments = - 0.5 * np.tile([0] * len(courier_positions) + [0] * len(pickup_positions) + 
+#                                        [0] * len(depot_positions) + payments, (len(all_positions), 1))
+#         payment_shift = all_payments.min()
 #         dist_payment_matrix = dist_matrix + all_payments
 #         dist_payment_matrix = dist_payment_matrix - payment_shift
 #         dist_payment_matrix[np.diag_indices(dist_payment_matrix.shape[0])] = 0
@@ -117,7 +118,10 @@ class ORToolsSolver:
     def time_callback(self, from_index, to_index):
         """Returns the manhattan distance between the two nodes."""
         # Convert from routing variable Index to distance matrix NodeIndex.
-        return 10 + self.dist_matrix[self.manager.IndexToNode(from_index), self.manager.IndexToNode(to_index)]
+        dist = self.dist_matrix[self.manager.IndexToNode(from_index), self.manager.IndexToNode(to_index)]
+        if to_index != 0:
+            dist += 10
+        return dist
         
 #     def cost_callback(self, from_index, to_index):
 #         """Returns the manhattan distance between the two nodes."""
@@ -127,10 +131,10 @@ class ORToolsSolver:
     def solve(self):
         # Setting first solution heuristic.
         search_parameters = pywrapcp.DefaultRoutingSearchParameters()
-        search_parameters.solution_limit = 1
+#         search_parameters.solution_limit = 1
 #         search_parameters.time_limit.seconds = 180
 #         search_parameters.lns_time_limit.seconds = 1
-        search_parameters.savings_parallel_routes = True
+#         search_parameters.savings_parallel_routes = True
 
         search_parameters.first_solution_strategy = (
             routing_enums_pb2.FirstSolutionStrategy.AUTOMATIC)
@@ -167,9 +171,6 @@ class ORToolsSolver:
                 
                 if self.is_dropoff_node(self.manager.IndexToNode(index)):
                     total_dropped += 1
-    #             if previous_index > len(couriers) + 1 and index > len(couriers) + 1:
-    #                 route_cost += payment_shift
-    #         route_cost *= 2 
     
             courier_distance.append(route_distance)
             plan_output += '{}\n'.format(self.manager.IndexToNode(index))
@@ -182,10 +183,6 @@ class ORToolsSolver:
                 total_distance, total_dropped / len(self.orders)))
         return {courier: {'route': route[:-1], 'time': distance} 
                 for (courier, route), distance in zip(courier_routes.items(), courier_distance) if len(route) > 2}
-    
-    
-from tqdm import tqdm
-
 
 def get_node_action(courier, node, orders):
     n = len(orders)
