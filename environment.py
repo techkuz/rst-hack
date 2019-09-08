@@ -50,6 +50,7 @@ class Environment:
                                                                     self.couriers[courier_id].location_y],
                                                                    [self.orders[courier_order].pickup_location_x,
                                                                     self.orders[courier_order].pickup_location_y])
+                    print('pick dist')
                     self.couriers[courier_id].destination_distance = distance
                 elif courier_action == 'dropoff':
                     distance = Courier.get_travel_duration_minutes([self.couriers[courier_id].location_x,
@@ -59,10 +60,10 @@ class Environment:
                     self.couriers[courier_id].destination_distance = distance
         # итерируюсь по минутам рабочего времени курьеров
         for minute in range(self.time, self.END_MINUTES+1):
-            self.time +=1
+            #self.time +=1
             #print(minute)
             if action_done:
-                print('break')
+                self.time = minute
                 break
             for courier_id in self.couriers:
                 if self.couriers[courier_id].destination_distance == 0:
@@ -76,9 +77,7 @@ class Environment:
                 self.couriers[courier_id].time += 1
                 if self.couriers[courier_id].destination_distance is not None:
                     self.couriers[courier_id].destination_distance -= 1
-
                 if courier_action == 'pickup':
-                    print('pick')
                     work_duration = Courier.get_travel_duration_minutes([self.couriers[courier_id].location_x,
                                                                     self.couriers[courier_id].location_y],
                                                                    [self.orders[courier_order].pickup_location_x,
@@ -92,7 +91,6 @@ class Environment:
                     self.profit -= work_payment
 
                 elif courier_action == 'dropoff':
-                    print('drop')
                     work_duration = Courier.get_travel_duration_minutes([self.couriers[courier_id].location_x,
                                                                     self.couriers[courier_id].location_y],
                                                                    [self.orders[courier_order].dropoff_location_x,
@@ -109,7 +107,7 @@ class Environment:
 
                         if not self.couriers[courier_id].order_info:
                             self.couriers[courier_id].is_active = False
-                    work_payment = work_duration * 2
+                    work_payment = work_duration*2
                     self.profit += self.orders_payment - work_payment
 
         #work_duration = sum([x.time - 360 for x in self.couriers.values()])
