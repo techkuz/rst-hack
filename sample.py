@@ -4,7 +4,8 @@ import torch
 
 env = Environment()
 
-couriers, orders, reward = env.main_logic()
+#couriers, orders, reward = env.main_logic()
+#print(couriers, orders, reward)
 
 
 '''courier_coords = torch.FloatTensor(list([[couriers[courierd_id].location_x, courier.location_y] for courier_id in couriers])).cuda()#dynamic
@@ -15,9 +16,12 @@ orders_time = torch.FloatTensor(
     list([[order.pickup_from, order.pickup_to, order.dropoff_from, order.dropoff_to] for order in orders])).cuda()#static'''
 
 
-action1 = [[2, 'pick'],[1,'pick']]
+action1 = [[1, 'pickup']]
 couriers, orders, reward = env.main_logic(action1)
-
+print(couriers, orders, reward)
+action2 = [[1, 'dropoff']]
+couriers, orders, reward = env.main_logic(action2)
+print(couriers, orders, reward)
 '''dynamic = []
 
 
