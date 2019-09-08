@@ -16,11 +16,17 @@ orders_time = torch.FloatTensor(
     list([[order.pickup_from, order.pickup_to, order.dropoff_from, order.dropoff_to] for order in orders])).cuda()#static'''
 
 
-action1 = [[1, 'pickup']]
+action1 = [[1, 'pickup'],[]]
 couriers, orders, reward = env.main_logic(action1)
 print(couriers, orders, reward)
-action2 = [[1, 'dropoff']]
+action2 = [[1, 'dropoff'],[]]
 couriers, orders, reward = env.main_logic(action2)
+print(couriers, orders, reward)
+action3 = [[],[1,'pickup']]
+couriers, orders, reward = env.main_logic(action3)
+print(couriers, orders, reward)
+action4 = [[],[1,'dropoff']]
+couriers, orders, reward = env.main_logic(action4)
 print(couriers, orders, reward)
 '''dynamic = []
 

@@ -21,20 +21,6 @@
       "dropoff_from": 360,
       "dropoff_to": 1380,
       "payment": 900
-    },
-    {
-      "order_id": 10002,
-      "pickup_point_id": 40002,
-      "pickup_location_x": 22,
-      "pickup_location_y": 22,
-      "pickup_from": 360,
-      "pickup_to": 1380,
-      "dropoff_point_id": 60002,
-      "dropoff_location_x": 51,
-      "dropoff_location_y": 51,
-      "dropoff_from": 360,
-      "dropoff_to": 1380,
-      "payment": 900
     }
   ]
 }

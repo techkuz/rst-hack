@@ -19,12 +19,15 @@ class Environment:
             self.orders = parser.get_orders()
             self.orders_payment = 0
             self.profit = 0
+            self.time = self.START_MINUTES
 
     def new_action(self, actions: list) -> None :
         # На вход приходит лист из новых actions
         # Формат: [[c_id, action], [c_id, action]]
-        for order_idx, (courier_id, action) in enumerate(actions):
-            self.couriers[courier_id].order_info.append((order_idx+10001, action))
+        for order_idx, action_data in enumerate(actions):
+            if action_data:
+                (courier_id, action) = action_data
+                self.couriers[courier_id].order_info.append((order_idx+10001, action))
 
     def return_valuable_info(self) -> tuple:
         couriers_locations = [[courier['location_x'], courier['location_y']] for courier in self.couriers]
@@ -43,23 +46,23 @@ class Environment:
                 courier_action = self.couriers[courier_id].order_info[0][1]
 
                 if courier_action == 'pickup':
-
                     distance = Courier.get_travel_duration_minutes([self.couriers[courier_id].location_x,
                                                                     self.couriers[courier_id].location_y],
                                                                    [self.orders[courier_order].pickup_location_x,
                                                                     self.orders[courier_order].pickup_location_y])
                     self.couriers[courier_id].destination_distance = distance
-                    print(distance)
                 elif courier_action == 'dropoff':
                     distance = Courier.get_travel_duration_minutes([self.couriers[courier_id].location_x,
                                                                     self.couriers[courier_id].location_y],
                                                                    [self.orders[courier_order].dropoff_location_x,
                                                                     self.orders[courier_order].dropoff_location_y])
                     self.couriers[courier_id].destination_distance = distance
-                    print(distance)
         # итерируюсь по минутам рабочего времени курьеров
-        for minute in range(self.START_MINUTES, self.END_MINUTES+1, 1):
+        for minute in range(self.time, self.END_MINUTES+1):
+            self.time +=1
+            #print(minute)
             if action_done:
+                print('break')
                 break
             for courier_id in self.couriers:
                 if self.couriers[courier_id].destination_distance == 0:
@@ -75,6 +78,7 @@ class Environment:
                     self.couriers[courier_id].destination_distance -= 1
 
                 if courier_action == 'pickup':
+                    print('pick')
                     work_duration = Courier.get_travel_duration_minutes([self.couriers[courier_id].location_x,
                                                                     self.couriers[courier_id].location_y],
                                                                    [self.orders[courier_order].pickup_location_x,
@@ -85,9 +89,10 @@ class Environment:
                         action = self.couriers[courier_id].order_info.pop()
                         self.couriers[courier_id].has_order = True
                     work_payment = work_duration * 2
-                    self.profit += self.orders_payment - work_payment
+                    self.profit -= work_payment
 
                 elif courier_action == 'dropoff':
+                    print('drop')
                     work_duration = Courier.get_travel_duration_minutes([self.couriers[courier_id].location_x,
                                                                     self.couriers[courier_id].location_y],
                                                                    [self.orders[courier_order].dropoff_location_x,
@@ -97,7 +102,7 @@ class Environment:
                     self.couriers[courier_id].location_y = self.orders[
                         self.couriers[courier_id].order_info[0][0]].dropoff_location_y
                     if self.orders[courier_order].dropoff_from < minute < self.orders[courier_order].dropoff_to:
-                        self.orders_payment += self.orders[courier_order].payment
+                        self.orders_payment = self.orders[courier_order].payment
                         self.orders[self.couriers[courier_id].order_info[0][0]].delivered = True
                         action = self.couriers[courier_id].order_info.pop()
                         self.couriers[courier_id].has_order = False
