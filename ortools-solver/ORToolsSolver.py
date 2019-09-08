@@ -55,7 +55,7 @@ class ORToolsSolver:
         # Add Distance constraint.
         self.routing.AddDimension(
             time_transit_callback_index,
-            24 * 60,  # courier max wait time
+            0,  # courier max wait time
             24 * 60,  # courier maximum travel time
             False,
             'Distance')
@@ -203,7 +203,9 @@ def get_solution(couriers, orders, depots, clusters):
     
     solution = []
     
-    for cluster in tqdm(np.random.permutation(clusters_copy)):
+    pb = tqdm(np.random.permutation(clusters_copy))
+    for cluster in pb:
+        pb.set_description(f"Cluster size: {len(cluster)}")
 
         cluster_orders = [orders[i] for i in cluster]
         solver = ORToolsSolver(couriers, cluster_orders, depots)
