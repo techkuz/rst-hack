@@ -1,0 +1,7 @@
+argparse
+matplotlib
+numpy
+ortools
+scikit-learn
+scipy
+tqdm
