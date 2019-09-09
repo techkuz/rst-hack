@@ -33,14 +33,16 @@ def preprocess_data(couriers, orders):
     # fix order's time windows
     bad_order_counter = 0
     for order in filtered_orders:
-        if order['pickup_to'] <= order['pickup_from']:
+        if order['pickup_to'] < order['pickup_from']:
             print(f"Bad time window order: {(order['pickup_from'], order['pickup_to'])}")
-            order['pickup_to'], order['pickup_from'] = order['pickup_from'], order['pickup_to']
+#             order['pickup_to'], order['pickup_from'] = order['pickup_from'], order['pickup_to']
+            order['pickup_to'] = 24 * 60
             bad_order_counter += 1
 
-        if order['dropoff_to'] <= order['dropoff_from']:
+        if order['dropoff_to'] < order['dropoff_from']:
             print(f"Bad time window order: {(order['dropoff_from'], order['dropoff_to'])}")
-            order['dropoff_to'], order['dropoff_from'] = order['dropoff_from'], order['dropoff_to']
+#             order['dropoff_to'], order['dropoff_from'] = order['dropoff_from'], order['dropoff_to']
+            order['dropoff_from'] = 6 * 60
             bad_order_counter += 1
     
     # courier initial time windows
