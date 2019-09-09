@@ -32,15 +32,23 @@ if __name__ == '__main__':
     
     clusters = sorted(recursive_dbscan(X, np.arange(len(X))), key=len)[::-1]
 
-    aggregate_clusters = [clusters[0]]
+
+    aggregated = True
     
-    for cluster in clusters[1:]:
-        if len(aggregate_clusters[-1]) < 500:
-            aggregate_clusters[-1] = np.concatenate([aggregate_clusters[-1], cluster])
-        else:
-            aggregate_clusters.append(cluster)
+    while aggregated:
+        aggregated = False
+        aggregate_clusters = [clusters[0]]
+        
+        for cluster in clusters[1:]:
+            if len(cluster) + len(aggregate_clusters[-1]) < 1500:
+                aggregate_clusters[-1] = np.concatenate([aggregate_clusters[-1], cluster])
+                aggregated = True
+            else:
+                aggregate_clusters.append(cluster)
+                
+        clusters = aggregate_clusters
     
-    print(f"Cluster sizes: {np.array(sorted([len(c) for c in clusters]))}, Aggregated: {np.array(sorted([len(c) for c in aggregate_clusters]))}")
+    print(f"Cluster sizes: {np.array(sorted([len(c) for c in clusters]))}")
 
     solution = get_solution(couriers, orders, depots, aggregate_clusters) 
 

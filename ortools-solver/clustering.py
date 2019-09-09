@@ -3,10 +3,10 @@ from sklearn.cluster import DBSCAN
 
 
 # magic constants
-min_radius = 30
-max_radius = 100
-min_no_clusters = 5
-max_avg_cluster_size = 500
+min_radius = 80
+max_radius = 120
+min_no_clusters = 2
+max_avg_cluster_size = 1000
 max_cluster_size = 1500
 
 def recursive_dbscan(X, indices, min_radius=min_radius, max_radius=max_radius):
@@ -38,7 +38,7 @@ def recursive_dbscan(X, indices, min_radius=min_radius, max_radius=max_radius):
     new_clusters = []
     for cluster_indices, cluster in zip(final_indices, final_clusters):
         if len(cluster) > max_cluster_size:
-            new_clusters.extend(recursive_dbscan(cluster, cluster_indices, 0.9999 * max_radius, 1.2 * max_radius))
+            new_clusters.extend(recursive_dbscan(cluster, cluster_indices, 0.8 * max_radius, 1.2 * max_radius))
         else:
             new_clusters.append(cluster_indices)
     return new_clusters
